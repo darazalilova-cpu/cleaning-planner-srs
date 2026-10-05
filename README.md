@@ -10,8 +10,8 @@
 
 ## Документация
 
-- [Техническое задание в Wiki](https://github.com/YOUR_USERNAME/cleaning-planner-srs/wiki/Техническое-задание).
-- [Задачи и критерии приёмки в Issues](https://github.com/YOUR_USERNAME/cleaning-planner-srs/issues).
+- [Техническое задание в Wiki](https://github.com/darazalilova-cpu/cleaning-planner-srs/wiki/Техническое-задание).
+- [Задачи и критерии приёмки в Issues](https://github.com/darazalilova-cpu/cleaning-planner-srs/issues).
 
 ## Основные возможности
 
