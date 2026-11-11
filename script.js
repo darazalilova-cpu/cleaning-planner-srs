@@ -18,6 +18,10 @@ function edit(task) {
   $('repeat').value=[0,1,7].includes(task.interval)?String(task.interval):'custom';$('interval').value=task.interval||2;$('intervalLabel').hidden=$('repeat').value!=='custom';$('reminder').value=task.reminder===null?'none':String(task.reminder);$('title').focus();
 }
 function button(text, fn, className='secondary') { const b=document.createElement('button');b.type='button';b.textContent=text;b.className=className;b.addEventListener('click',fn);return b; }
+function askConfirmation(text) {
+  const dialog=$('confirmDialog');$('confirmText').textContent=text;dialog.returnValue='cancel';
+  return new Promise(resolve=>{dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true});dialog.showModal();});
+}
 function render() {
   const visible=P.select(tasks,{room:$('filterRoom').value,status:$('filterStatus').value,period:$('filterPeriod').value});
   $('taskList').replaceChildren();$('empty').hidden=visible.length>0;$('counter').textContent=`Показано ${visible.length} из ${tasks.length}`;
@@ -31,7 +35,7 @@ function render() {
     if(task.completedAt){const p=document.createElement('p');p.className='meta';p.textContent='Выполнено: '+dateText(task.completedAt);li.append(p);}
     const actions=document.createElement('div');actions.className='actions';
     if(task.status==='pending')actions.append(button('Выполнить',()=>{if(save(P.complete(tasks,task.id,new Date(),uid())) && editing===task.id)clearForm();},''),button('Редактировать',()=>edit(task)));
-    actions.append(button('Удалить',()=>{if(confirm('Удалить это дело? Выполненные экземпляры серии сохранятся.')){if(save(tasks.filter(t=>t.id!==task.id)) && editing===task.id)clearForm();}},'danger'));
+    actions.append(button('Удалить',async()=>{if(await askConfirmation('Удалить это дело? Выполненные экземпляры серии сохранятся.')){if(save(tasks.filter(t=>t.id!==task.id)) && editing===task.id)clearForm();}},'danger'));
     li.append(actions);fragment.append(li);
   }
   $('taskList').append(fragment);
@@ -47,7 +51,7 @@ $('repeat').addEventListener('change',()=>{$('intervalLabel').hidden=$('repeat')
 $('cancel').addEventListener('click',clearForm);$('addButton').addEventListener('click',()=>{clearForm();$('title').focus();});
 $('filters').addEventListener('change',render);$('filters').addEventListener('reset',()=>setTimeout(render,0));
 $('dismissReminders').addEventListener('click',()=>{$('reminders').hidden=true;});
-$('resetData').addEventListener('click',()=>{if(confirm('Очистить повреждённые данные? Это удалит все сохранённые дела.')){try{localStorage.removeItem('cleaning-planner-v1');blocked=false;tasks=[];$('resetData').hidden=true;render();message('Данные очищены');}catch{message('Не удалось сохранить изменения',true);}}});
+$('resetData').addEventListener('click',async()=>{if(await askConfirmation('Очистить повреждённые данные? Это удалит все сохранённые дела.')){try{localStorage.removeItem('cleaning-planner-v1');blocked=false;tasks=[];$('resetData').hidden=true;render();message('Данные очищены');}catch{message('Не удалось сохранить изменения',true);}}});
 try{tasks=P.decode(localStorage.getItem('cleaning-planner-v1'));}catch{blocked=true;message('Не удалось загрузить данные',true);$('resetData').hidden=false;}
 render();
 function checkReminders() {
