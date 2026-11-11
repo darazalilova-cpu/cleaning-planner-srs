@@ -1,0 +1,30 @@
+name: Publish v1.0.0
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify application and database
+        run: |
+          node --check model.js
+          node --check script.js
+          node --test tests/model.test.cjs
+          python3 tests/test_database.py
+      - name: Publish verified source release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.0.0 >/dev/null 2>&1; then
+            echo 'v1.0.0 already published'
+          else
+            gh release create v1.0.0 --target "$GITHUB_SHA" --title 'v1.0.0 — Планировщик уборки' --notes-file RELEASE_NOTES.md
+          fi
+
