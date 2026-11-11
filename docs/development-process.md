@@ -12,6 +12,8 @@
 | feature/recurring-reminders | [#33](https://github.com/darazalilova-cpu/cleaning-planner-srs/pull/33) | Повторения, история и напоминания; Squash and merge |
 | feature/filters-and-ci | [#34](https://github.com/darazalilova-cpu/cleaning-planner-srs/pull/34) | Фильтры по сроку и автоматическая проверка качества |
 | feature/database-3nf | [#35](https://github.com/darazalilova-cpu/cleaning-planner-srs/pull/35) | ER-модель, нормализация, DDL и тесты БД |
+| docs/labs-2-3-4 | [#36](https://github.com/darazalilova-cpu/cleaning-planner-srs/pull/36) | План, инструкция, протокол и доступный диалог подтверждения |
+| release/v1.0.0 | [#37](https://github.com/darazalilova-cpu/cleaning-planner-srs/pull/37) | Публикация проверенного релиза v1.0.0 через Actions |
 
 Первый блок включает коммиты `feat: add basic project structure` и `feat: implement cleaning task creation editing and deletion`. Для БД отдельно сохранён `docs: add initial ER diagram` и коммит схемы. При Squash and merge PR #33 объединён в один коммит. Ключевые слова Closes автоматически закрывают связанные задачи после объединения в main.
 
