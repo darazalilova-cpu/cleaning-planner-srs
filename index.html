@@ -1,2 +1,23 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><title>Планировщик уборки</title><link rel="stylesheet" href="style.css"></head><body><h1>Планировщик уборки</h1><script src="script.js"></script></body></html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Планировщик уборки</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div><p class="eyebrow">ДОМАШНИЕ ДЕЛА · ВАРИАНТ 11</p><h1>Планировщик уборки</h1><p>Меньше держать в голове. Больше порядка дома.</p></div><button id="addButton">+ Добавить дело</button></header>
+<main>
+<p id="message" role="status" aria-live="polite"></p><button id="resetData" hidden>Очистить повреждённые данные</button>
+<section id="reminders" aria-label="Напоминания" hidden><h2>Пора заняться делами</h2><ul id="reminderList"></ul><button id="dismissReminders">Закрыть напоминания</button></section>
+<div class="layout"><section class="board"><div class="section-head"><h2>Ваш чек-лист</h2><span id="counter"></span></div>
+<form id="filters" class="filters"><label>Помещение<select id="filterRoom"><option value="">Все помещения</option></select></label><label>Статус<select id="filterStatus"><option value="pending">Не выполнено</option><option value="completed">Выполнено</option><option value="">Все</option></select></label><label>Срок<select id="filterPeriod"><option value="">Все</option><option value="today">Сегодня</option><option value="week">Ближайшие 7 дней</option><option value="overdue">Просроченные</option></select></label><button type="reset" class="secondary">Сбросить фильтры</button></form>
+<ul id="taskList" class="task-list"></ul><p id="empty">Дел не найдено</p></section>
+<aside><h2 id="formHeading">Новое дело</h2><form id="taskForm" novalidate>
+<label>Название<input id="title" name="title" maxlength="100" required aria-describedby="titleError"><small class="error" id="titleError"></small></label>
+<label>Помещение<select id="room" name="room" required aria-describedby="roomError"><option value="">Выберите помещение</option></select><small class="error" id="roomError"></small></label>
+<label>Описание<textarea id="description" name="description" maxlength="500" rows="3" aria-describedby="descriptionError"></textarea><small class="error" id="descriptionError"></small></label>
+<label>Дата и время<input id="due" name="due" type="datetime-local" required aria-describedby="dueError"><small class="error" id="dueError"></small></label>
+<label>Повторение<select id="repeat" name="repeat"><option value="0">Не повторять</option><option value="1">Каждый день</option><option value="7">Каждую неделю</option><option value="custom">Каждые N дней</option></select></label>
+<label id="intervalLabel" hidden>Интервал в днях<input id="interval" name="interval" type="number" min="1" max="365" value="2" aria-describedby="intervalError"><small class="error" id="intervalError"></small></label>
+<label>Напоминание<select id="reminder" name="reminder"><option value="0">В срок</option><option value="15">За 15 минут</option><option value="60">За 1 час</option><option value="none">Без напоминания</option></select></label>
+<div class="actions"><button type="submit">Сохранить</button><button id="cancel" type="button" class="secondary">Отмена</button></div>
+</form></aside></div>
+<details><summary>О приложении</summary><p>Версия 1.0.0. Данные хранятся только в этом браузере на этом устройстве. Очистка данных сайта удалит дела и историю. Напоминания работают внутри открытого приложения. Регистрация и синхронизация не требуются.</p></details>
+</main><footer>Порядок начинается с одного небольшого дела.</footer><script src="model.js"></script><script src="script.js"></script></body></html>
