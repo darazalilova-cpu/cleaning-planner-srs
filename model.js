@@ -27,7 +27,20 @@
     return tasks.map(t => t.id !== id || t.status !== 'pending' ? t : {...t, ...input, title:input.title.trim(), seriesId:input.interval ? (t.seriesId || t.id) : null, notified: t.due !== input.due || t.reminder !== input.reminder ? false : t.notified});
   }
   function complete(tasks, id, now = new Date(), newId = id + '-next') {
-    return tasks.map(t => t.id === id && t.status === 'pending' ? {...t, status:'completed', completedAt:localDate(now)} : t);
+    const task = tasks.find(t => t.id === id);
+    if (!task || task.status === 'completed') return tasks;
+    const next = tasks.map(t => t.id === id ? {...t, status:'completed', completedAt:localDate(now)} : t);
+    if (task.interval) {
+      if (tasks.some(t => t.id === newId)) throw new Error('Идентификатор уже существует');
+      const due = new Date(task.due);
+      // Calendar days preserve local wall-clock time across daylight-saving changes.
+      do { due.setDate(due.getDate() + task.interval); } while (due <= now);
+      next.push({...task, id:newId, due:localDate(due), status:'pending', createdAt:localDate(now), completedAt:null, notified:false});
+    }
+    return next;
+  }
+  function reminders(tasks, now = new Date()) {
+    return tasks.filter(t => t.status === 'pending' && !t.notified && t.reminder !== null && +new Date(t.due) - t.reminder*60000 <= +now);
   }
   function select(tasks, filters = {}, now = new Date()) {
     return tasks.filter(t => (!filters.room || t.room === filters.room) && (!filters.status || t.status === filters.status)).sort((a,b) => a.due.localeCompare(b.due) || a.createdAt.localeCompare(b.createdAt));
@@ -49,7 +62,7 @@
   }
   const encode = tasks => JSON.stringify({version:1,tasks});
   function persist(storage, tasks) { storage.setItem('cleaning-planner-v1', encode(tasks)); return tasks; }
-  const api = {rooms, localDate, validDate, validate, create, update, complete, select, decode, encode, persist};
+  const api = {rooms, localDate, validDate, validate, create, update, complete, reminders, select, decode, encode, persist};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Planner = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
