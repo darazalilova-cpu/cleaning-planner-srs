@@ -40,3 +40,11 @@ test('storage failure leaves last successful state intact',()=>{
   const previous=[task()];const next=P.complete(previous,'a',new Date(),'b');
   assert.throws(()=>P.persist({setItem(){throw Error('QuotaExceededError');}},next));assert.equal(previous[0].status,'pending');
 });
+test('room status and date filters intersect with seven calendar days',()=>{
+  const a=task(),b={...a,id:'b',due:'2026-10-11T23:59'},c={...a,id:'c',due:'2026-10-12T00:00'};
+  const now=new Date('2026-10-05T12:00');
+  assert.equal(P.select([c,b,a],{room:'Кухня',status:'pending',period:'week'},now).length,2);
+  assert.equal(P.select([c,b,a],{period:'today'},now)[0].id,'a');
+  assert.equal(P.select([a,{...b,status:'completed'}],{period:'overdue'},new Date('2026-10-12')).length,1);
+  assert.equal(P.select([a],{room:'Ванная'},now).length,0);
+});

@@ -43,7 +43,16 @@
     return tasks.filter(t => t.status === 'pending' && !t.notified && t.reminder !== null && +new Date(t.due) - t.reminder*60000 <= +now);
   }
   function select(tasks, filters = {}, now = new Date()) {
-    return tasks.filter(t => (!filters.room || t.room === filters.room) && (!filters.status || t.status === filters.status)).sort((a,b) => a.due.localeCompare(b.due) || a.createdAt.localeCompare(b.createdAt));
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const end = new Date(today); end.setDate(end.getDate()+7);
+    return tasks.filter(t => {
+      if (filters.room && t.room !== filters.room || filters.status && t.status !== filters.status) return false;
+      const date = new Date(t.due);
+      if (filters.period === 'today') return t.due.slice(0,10) === localDate(today).slice(0,10);
+      if (filters.period === 'week') return date >= today && date < end;
+      if (filters.period === 'overdue') return t.status === 'pending' && date < now;
+      return true;
+    }).sort((a,b) => a.due.localeCompare(b.due) || a.createdAt.localeCompare(b.createdAt));
   }
   function decode(raw) {
     if (raw === null) return [];
