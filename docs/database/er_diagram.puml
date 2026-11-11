@@ -1,0 +1,57 @@
+@startuml
+hide circle
+skinparam linetype ortho
+entity Users {
+PK user_id : INTEGER
+UK username : TEXT
+created_at : TEXT
+}
+entity Rooms {
+PK room_id : INTEGER
+UK name : TEXT
+}
+entity Series {
+PK series_id : INTEGER
+created_at : TEXT
+}
+entity Tasks {
+PK task_id : INTEGER
+title : TEXT (1..100)
+description : TEXT (0..500)
+due_date : TEXT (local)
+status : pending | completed
+created_at : TEXT
+completed_at : TEXT?
+interval_days : INTEGER
+reminder_minutes : INTEGER?
+reminder_shown : INTEGER
+FK user_id : INTEGER
+FK room_id : INTEGER
+FK series_id : INTEGER?
+}
+entity Task_Categories {
+PK, FK task_id : INTEGER
+PK, FK category_id : INTEGER
+}
+entity Categories {
+PK category_id : INTEGER
+UK name : TEXT
+description : TEXT
+}
+entity Task_Labels {
+PK, FK task_id : INTEGER
+PK, FK label_id : INTEGER
+}
+entity Labels {
+PK label_id : INTEGER
+UK name : TEXT
+color : TEXT
+}
+Users ||--o{ Tasks
+Rooms ||--o{ Tasks
+Series |o--o{ Tasks
+Tasks ||--o{ Task_Categories
+Categories ||--o{ Task_Categories
+Tasks ||--o{ Task_Labels
+Labels ||--o{ Task_Labels
+@enduml
