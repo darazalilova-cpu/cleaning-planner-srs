@@ -50,3 +50,20 @@ $('dismissReminders').addEventListener('click',()=>{$('reminders').hidden=true;}
 $('resetData').addEventListener('click',()=>{if(confirm('Очистить повреждённые данные? Это удалит все сохранённые дела.')){try{localStorage.removeItem('cleaning-planner-v1');blocked=false;tasks=[];$('resetData').hidden=true;render();message('Данные очищены');}catch{message('Не удалось сохранить изменения',true);}}});
 try{tasks=P.decode(localStorage.getItem('cleaning-planner-v1'));}catch{blocked=true;message('Не удалось загрузить данные',true);$('resetData').hidden=false;}
 render();
+function checkReminders() {
+  if(blocked || document.hidden)return;
+  const due=P.reminders(tasks);
+  if(due.length){
+    const ids=new Set(due.map(t=>t.id));
+    if(save(tasks.map(t=>ids.has(t.id)?{...t,notified:true}:t))){
+      const list=$('reminderList');list.replaceChildren();
+      for(const t of due){const li=document.createElement('li');li.textContent=`${t.title} · ${t.room} · ${dateText(t.due)}`;list.append(li);}
+      $('reminders').hidden=false;
+    }
+  }
+  render();
+}
+checkReminders();
+setInterval(checkReminders,30000);
+document.addEventListener('visibilitychange',checkReminders);
+window.addEventListener('focus',checkReminders);
