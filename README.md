@@ -1,51 +1,45 @@
 # Планировщик уборки
 
-Учебный проект, вариант 11: чек-лист разовых и регулярных домашних дел с напоминаниями. Репозиторий объединяет лабораторные работы 1–4. Прототип написан на HTML/CSS/JavaScript без внешних зависимостей.
+Учебный проект по разработке приложения для домашних дел. Вариант 11.
 
-## Где посмотреть работы
+**Выполнила:** Жалилова Дарья Ренатовна.
 
-| Работа | Результаты |
-|---|---|
-| №1 Требования | [ТЗ в Wiki](../../wiki/Техническое-задание), исходные Issues #1–#6 |
-| №2 Планирование | [План проекта](docs/project-plan.md), [Roadmap и даты](https://github.com/users/darazalilova-cpu/projects/1), [беклог Issues](../../issues?q=is%3Aissue+WBS+in%3Atitle), [Milestones](../../milestones), [CSV](docs/backlog.csv) |
-| №3 Реализация и качество | [Процесс разработки](docs/development-process.md), [Pull Requests](../../pulls?q=is%3Apr+is%3Amerged), [CI](../../actions), [релиз v1.0.0](../../releases/tag/v1.0.0) |
-| №4 Моделирование БД | [Нормализация до 3NF](database/normalization.md), [ER PNG](docs/database/er_diagram.png), [ER SVG](docs/database/er_diagram.svg), [DDL](database/schema.sql), [тестовые данные](database/seed_data.sql) |
+## Описание
 
-Wiki: [План проекта](../../wiki/План-проекта), [Процесс разработки](../../wiki/Процесс-разработки), [normalization](../../wiki/normalization).
+Приложение помогает планировать уборку: добавлять дела, указывать комнату и срок, настраивать повторения и напоминания. Дела можно изменять, удалять, фильтровать и отмечать выполненными.
 
-Исполнитель: **Жалилова Дарья Ренатовна** (@darazalilova-cpu). GitHub Project открыт для публичного просмотра; диаграмма Ганта и таблица также доступны в [полном плане](docs/project-plan.md).
+[Техническое задание](https://github.com/darazalilova-cpu/cleaning-planner-srs/wiki/Техническое-задание)
 
-## Запуск приложения
+## Лабораторная работа №2 — Планирование проекта
 
-Скачайте репозиторий через **Code → Download ZIP**, распакуйте и откройте `index.html` в Chrome или Edge. Рекомендуемый стабильный адрес локального приложения:
+Составлен план из 25 задач с оценками, сроками, ролями и зависимостями.
 
-```sh
-python -m http.server 8000
-```
+- [План проекта и участник](https://github.com/darazalilova-cpu/cleaning-planner-srs/wiki/План-проекта)
+- [GitHub Project — диаграмма Ганта](https://github.com/users/darazalilova-cpu/projects/1)
+- [Задачи](https://github.com/darazalilova-cpu/cleaning-planner-srs/issues?q=is%3Aissue+WBS+in%3Atitle) и [контрольные точки](https://github.com/darazalilova-cpu/cleaning-planner-srs/milestones)
 
-После запуска откройте `http://localhost:8000`. Сборка и npm install не нужны. Адрес и профиль браузера должны оставаться одинаковыми для доступа к сохранённым делам.
+Project открыт для публичного просмотра. [Полный календарный план](docs/project-plan.md).
 
-Можно создавать, изменять и удалять дела, фильтровать их по помещению, сроку и статусу, отмечать выполнение и просматривать историю. Регулярные дела поддерживают ежедневный, еженедельный и произвольный интервал 1–365 дней. Следующий экземпляр создаётся при выполнении предыдущего. Напоминания отображаются внутри открытого приложения.
+## Лабораторная работа №3 — Рабочее приложение
 
-Данные сохраняются локально. Очистка данных сайта удаляет дела и историю. Синхронизация, регистрация и доставка напоминаний при закрытой вкладке в эту версию не входят. SQLite-схема — отдельный результат ЛР4, её подключение к браузерному прототипу не требуется ТЗ.
+Приложение написано на HTML, CSS и JavaScript. Данные сохраняются в браузере.
 
-## Проверки
+**Как запустить:** нажмите **Code → Download ZIP**, распакуйте архив и откройте `index.html` в браузере. Установка библиотек не нужна. Напоминания работают, пока приложение открыто.
 
-```sh
-node --test tests/model.test.cjs
-python tests/test_database.py
-```
+- [Процесс разработки](https://github.com/darazalilova-cpu/cleaning-planner-srs/wiki/Процесс-разработки)
+- [Pull Requests](https://github.com/darazalilova-cpu/cleaning-planner-srs/pulls?q=is%3Apr+is%3Amerged) и [автоматические проверки](https://github.com/darazalilova-cpu/cleaning-planner-srs/actions)
+- [Релиз v1.0.0](https://github.com/darazalilova-cpu/cleaning-planner-srs/releases/tag/v1.0.0)
 
-10 тестов JavaScript проверяют валидацию, даты, повторения, историю, напоминания, фильтры и ошибки хранилища. 5 тестов SQLite проверяют DDL, данные, ограничения и индексы. GitHub Actions запускает проверки при push и Pull Request в main. [Протокол проверок](docs/verification.md).
+## Лабораторная работа №4 — База данных
 
-## Структура
+Спроектирована база данных SQLite, приведённая к третьей нормальной форме (3НФ).
 
-```text
-index.html / style.css / script.js   Интерфейс приложения
-model.js                            Модель и операции с данными
-tests/                              Тесты логики и SQLite
-.github/workflows/ci.yml             Автоматические проверки
-database/                           DDL, данные и нормализация
-docs/database/                      ER-диаграмма PNG/SVG/PlantUML
-docs/                               План, процесс и протокол
-```
+- [ER-диаграмма PNG](docs/database/er_diagram.png) и [SVG](docs/database/er_diagram.svg)
+- [SQL-схема](database/schema.sql) и [тестовые данные](database/seed_data.sql)
+- [Нормализация базы данных](https://github.com/darazalilova-cpu/cleaning-planner-srs/wiki/normalization)
+
+**Как проверить:** выполните в SQLite сначала `database/schema.sql`, затем `database/seed_data.sql`.
+
+База SQLite подготовлена для лабораторной №4. Браузерное приложение хранит дела в `localStorage`.
+
+Подробности проверок и команды для запуска тестов: [протокол](docs/verification.md).
